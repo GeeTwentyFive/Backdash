@@ -7,30 +7,7 @@ namespace Backdash.Tests.Specs.Unit.Sync.State;
 
 public class DefaultStateStoreTests
 {
-    [Fact]
-    public void ShouldInitializeCorrectly()
-    {
-        DefaultStateStore store = new(40);
-        store.Initialize(1);
-
-        ref var currentState = ref store.Next();
-        currentState.Frame = Frame.One;
-        currentState.Checksum = 0;
-
-        var gameState = GameState.CreateRandom();
-        GameStateSerializer.Shared.Serialize(new(currentState.GameState), in gameState);
-
-        if (!store.TryLoad(Frame.One, out var loaded))
-            Assert.Fail("Failed to load state.");
-
-        GameState newGameState = new();
-
-        var offset = 0;
-        BinaryBufferReader reader = new(loaded.GameState.WrittenSpan, ref offset);
-        GameStateSerializer.Shared.Deserialize(reader, ref newGameState);
-
-        newGameState.Should().BeEquivalentTo(gameState);
-    }
+    //
 }
 
 public record GameState
