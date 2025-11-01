@@ -136,27 +136,10 @@ sealed class InputQueue<TInput> where TInput : unmanaged
                 return true;
             }
 
-            // The requested frame isn't in the queue.
-            // This means we need to return a prediction frame. Predict that the user will do the same thing they did last time.
-            if (requestedFrame == 0)
-            {
-                logger.Write(LogLevel.Trace,
-                    $"Queue {QueueId} => basing new prediction frame from nothing, you're client wants frame 0.");
-                prediction.Erase();
-            }
-            else if (lastAddedFrame.IsNull)
-            {
-                logger.Write(LogLevel.Trace,
-                    $"Queue {QueueId} => basing new prediction frame from nothing, since we have no frames yet.");
-                prediction.Erase();
-            }
-            else
-            {
-                logger.Write(LogLevel.Trace,
-                    $"Queue {QueueId} => basing new prediction frame from previously added frame (queue entry:{inputs.CurrentIndex}, frame:{LastInput.Frame.Number})"
-                );
-                prediction = LastInput;
-            }
+            // Predict that the user will do nothing.
+            logger.Write(LogLevel.Trace,
+                $"Queue {QueueId} => basing new prediction frame from nothing.");
+            prediction.Erase();
 
             prediction.IncrementFrame();
         }
